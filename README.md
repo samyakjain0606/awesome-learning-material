@@ -7,7 +7,6 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 - [GitHub Repositories](#github-repositories)
 - [Articles & Websites](#articles--websites)
 - [Community Resources](#community-resources)
-- [Contributing](#contributing)
 
 ## 🛠 GitHub Repositories
 
@@ -16,6 +15,9 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 
 ### AI & Context Engineering
 - **[Context Engineering Intro](https://github.com/coleam00/context-engineering-intro)** - Comprehensive introduction to context engineering techniques. Essential reading for anyone working with AI systems and prompt optimization.
+
+### Web Scraping & Data Extraction
+- **[ScrapeGraph-ai](https://github.com/ScrapeGraphAI/Scrapegraph-ai)** - AI-powered web scraping library that uses large language models to create scraping pipelines for websites, documents and XML files with just a prompt.
 
 ### Claude AI Tools
 - **[Claudia](https://github.com/getAsterisk/claudia)** - Advanced tool for creating and managing Claude AI agents. Includes detailed documentation on agent creation and management.
