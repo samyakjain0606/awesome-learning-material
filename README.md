@@ -22,6 +22,7 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 ### Claude AI Tools
 - **[Claudia](https://github.com/getAsterisk/claudia)** - Advanced tool for creating and managing Claude AI agents. Includes detailed documentation on agent creation and management.
 - **[Claude Code Requirements Builder](https://github.com/rizethereum/claude-code-requirements-builder)** - Specialized tool for building and managing requirements in Claude Code projects.
+- **[Claude Code 3 step Workflow](./claude-commands/)** - Custom commands for structured, phase-based development with Claude Code. Transforms chaotic implementation into systematic, testable milestones.
 
 ## 📖 Articles & Websites
 
