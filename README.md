@@ -15,6 +15,7 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 
 ### AI & Context Engineering
 - **[Context Engineering Intro](https://github.com/coleam00/context-engineering-intro)** - Comprehensive introduction to context engineering techniques. Essential reading for anyone working with AI systems and prompt optimization.
+- **[Graphiti](https://github.com/getzep/graphiti)** - Open-source framework for building real-time knowledge graphs for AI agents. Enables dynamic data management with incremental updates, hybrid search, and temporal data tracking.
 
 ### Web Scraping & Data Extraction
 - **[ScrapeGraph-ai](https://github.com/ScrapeGraphAI/Scrapegraph-ai)** - AI-powered web scraping library that uses large language models to create scraping pipelines for websites, documents and XML files with just a prompt.
@@ -30,6 +31,9 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 - **[Pierce.dev](https://pierce.dev/)** - Exceptional articles on Claude Code, AI development, and cutting-edge programming techniques.
 - **[Spiess.dev](https://spiess.dev/)** - In-depth technical articles covering AI, software development, and modern development practices.
 - **[Steipete.me](https://steipete.me/)** - High-quality content on AI tools, development workflows, and technology insights.
+
+### AI Image & Creative Tools
+- **[ImagePromptly](https://imagepromptly.com/)** - Curated collection of 160+ AI image transformation prompts for ChatGPT and DALL-E. Transform photos into anime, vintage, cyberpunk, and other artistic styles.
 
 ## 🗨 Community Resources
 
