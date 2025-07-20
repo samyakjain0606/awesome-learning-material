@@ -49,6 +49,16 @@ This collection focuses on:
 - **Learning Resources**: Tutorials, articles, and educational content
 - **Community Insights**: Forums, discussions, and community-driven knowledge
 
+## Star History
+
+<a href="https://star-history.com/#samyakjain0606/awesome-learning-material&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=samyakjain0606/awesome-learning-material&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=samyakjain0606/awesome-learning-material&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=samyakjain0606/awesome-learning-material&type=Date" />
+ </picture>
+</a>
+
 ---
 
 ⭐ **Star this repository** if you find these resources helpful!
