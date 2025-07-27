@@ -34,6 +34,10 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 
 ### AI Image & Creative Tools
 - **[ImagePromptly](https://imagepromptly.com/)** - Curated collection of 160+ AI image transformation prompts for ChatGPT and DALL-E. Transform photos into anime, vintage, cyberpunk, and other artistic styles.
+- **[Superwhisper](https://superwhisper.com/)** - AI-powered voice-to-text tool for macOS that enables hands-free writing with exceptional accuracy. Perfect for content creators, developers, and professionals who want to dictate notes, code comments, or documents.
+
+### Knowledge Management & Productivity
+- **[Obsidian](https://obsidian.md/)** - Powerful knowledge management app that works on top of a local folder of plain text Markdown files. Features bidirectional linking, graph view, and extensive plugin ecosystem for building your personal knowledge base.
 
 ## 🗨 Community Resources
 
