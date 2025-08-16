@@ -32,12 +32,21 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 - **[Spiess.dev](https://spiess.dev/)** - In-depth technical articles covering AI, software development, and modern development practices.
 - **[Steipete.me](https://steipete.me/)** - High-quality content on AI tools, development workflows, and technology insights.
 
+### UI Components & Frontend Tools
+- **[Tailark](https://tailark.com/)** - Modern UI component library perfect for vibe coding frontend projects. Clean, customizable components for rapid prototyping and development.
+- **[Motion Primitives](https://motion-primitives.com/)** - Beautiful motion components and animations to enhance user experience in web applications.
+
 ### AI Image & Creative Tools
 - **[ImagePromptly](https://imagepromptly.com/)** - Curated collection of 160+ AI image transformation prompts for ChatGPT and DALL-E. Transform photos into anime, vintage, cyberpunk, and other artistic styles.
 - **[Superwhisper](https://superwhisper.com/)** - AI-powered voice-to-text tool for macOS that enables hands-free writing with exceptional accuracy. Perfect for content creators, developers, and professionals who want to dictate notes, code comments, or documents.
 
 ### Knowledge Management & Productivity
 - **[Obsidian](https://obsidian.md/)** - Powerful knowledge management app that works on top of a local folder of plain text Markdown files. Features bidirectional linking, graph view, and extensive plugin ecosystem for building your personal knowledge base.
+
+### MCP Servers
+- **[shadcn-ui MCP Server](https://github.com/Jpisnice/shadcn-ui-mcp-server)** - MCP server for integrating shadcn/ui components seamlessly into your development workflow.
+- **[Motion.dev AI Documentation](https://motion.dev/docs/ai-llm-documentation)** - Comprehensive AI and LLM documentation for motion design and development.
+- **[Upstash Context7](https://github.com/upstash/context7)** - High-performance MCP server for context management and data handling.
 
 ## 🗨 Community Resources
 
