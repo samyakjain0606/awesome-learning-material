@@ -86,3 +86,7 @@ This collection focuses on:
 🔄 **Watch this repository** to stay updated with new additions!
 
 📬 **Share your favorite resources** by opening an issue or submitting a pull request!
+
+## 👤 About Me
+
+Follow me on X (Twitter) for more insights on AI, development, and tech: **[@Samyak0606](https://x.com/Samyak0606)**
