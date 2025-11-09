@@ -31,6 +31,13 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 - **[Pierce.dev](https://pierce.dev/)** - Exceptional articles on Claude Code, AI development, and cutting-edge programming techniques.
 - **[Spiess.dev](https://spiess.dev/)** - In-depth technical articles covering AI, software development, and modern development practices.
 - **[Steipete.me](https://steipete.me/)** - High-quality content on AI tools, development workflows, and technology insights.
+- **[Simon Willison](https://simonwillison.net/)** - Insightful blog covering AI, LLMs, Python, and web development from a veteran developer and co-creator of Django.
+- **[Cassidy Williams](https://cassidoo.co/blog/)** - Engaging content on web development, career advice, and developer experiences.
+- **[Indragie Karunaratne](https://www.indragie.com/blog)** - Technical blog featuring in-depth posts on iOS development, programming, and software engineering.
+- **[Armin Ronacher](https://lucumr.pocoo.org/)** - Thought-provoking articles on Python, open source, and software architecture from the creator of Flask.
+
+### Claude AI Resources
+- **[Claude Plugins & Skills](https://claude-plugins.dev/skills)** - Comprehensive collection of Claude skills and plugins to extend Claude's capabilities for various use cases and workflows.
 
 ### UI Components & Frontend Tools
 - **[Tailark](https://tailark.com/)** - Modern UI component library perfect for vibe coding frontend projects. Clean, customizable components for rapid prototyping and development.
