@@ -24,6 +24,7 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 - **[Claudia](https://github.com/getAsterisk/claudia)** - Advanced tool for creating and managing Claude AI agents. Includes detailed documentation on agent creation and management.
 - **[Claude Code Requirements Builder](https://github.com/rizethereum/claude-code-requirements-builder)** - Specialized tool for building and managing requirements in Claude Code projects.
 - **[Claude Code 3 step Workflow](./claude-commands/)** - Custom commands for structured, phase-based development with Claude Code. Transforms chaotic implementation into systematic, testable milestones.
+- **[Pi](https://pi.dev/)** - Minimal, open-source terminal coding agent built on TypeScript extensions. Supports 15+ providers and hundreds of models, with tree-structured sessions, a package ecosystem, and multi-modal queuing. Designed for developers who prefer extensibility over prescriptive features.
 
 ## 📖 Articles & Websites
 
@@ -42,6 +43,10 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 ### UI Components & Frontend Tools
 - **[Tailark](https://tailark.com/)** - Modern UI component library perfect for vibe coding frontend projects. Clean, customizable components for rapid prototyping and development.
 - **[Motion Primitives](https://motion-primitives.com/)** - Beautiful motion components and animations to enhance user experience in web applications.
+- **[Impeccable](https://impeccable.style/)** - Design fluency toolkit for AI harnesses that teaches your AI real design skills. Provides 18 commands (/polish, /audit, /typeset, /overdrive, etc.) to steer frontend output, plus anti-pattern detection via CLI and Chrome extension. Works with Claude Code, Cursor, Gemini CLI, and more.
+- **[UI Skills](https://www.ui-skills.com/)** - Curated set of installable skills to polish interfaces built by AI agents. Includes foundation skills for accessibility, metadata, motion performance, and typography, plus curated skills for animation principles, interaction design, SwiftUI patterns, WCAG audits, and more. Works with Claude Code, Cursor, and OpenCode.
+- **[Mobbin](https://mobbin.com/)** - Massive design inspiration library featuring 1,150+ real-world iOS and web apps with 612k+ screens and 327k+ user flows. Search by screens, UI elements, flows, or text in screenshots. Includes Figma plugin integration and collections. Trusted by design teams at Airbnb, Figma, Uber, and more.
+- **[60fps.design](https://60fps.design/)** - Curated collection of 1,900+ delightful UI animation and interaction details from best-in-class apps. Browse by pattern type including scroll, swipe, morph, drag, blur, confetti, and 80+ more categories. Also features app sites, mockups, storyboards, and learning resources.
 
 ### AI Image & Creative Tools
 - **[ImagePromptly](https://imagepromptly.com/)** - Curated collection of 160+ AI image transformation prompts for ChatGPT and DALL-E. Transform photos into anime, vintage, cyberpunk, and other artistic styles.
