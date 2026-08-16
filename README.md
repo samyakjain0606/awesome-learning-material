@@ -26,6 +26,9 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 - **[Claude Code 3 step Workflow](./claude-commands/)** - Custom commands for structured, phase-based development with Claude Code. Transforms chaotic implementation into systematic, testable milestones.
 - **[Pi](https://pi.dev/)** - Minimal, open-source terminal coding agent built on TypeScript extensions. Supports 15+ providers and hundreds of models, with tree-structured sessions, a package ecosystem, and multi-modal queuing. Designed for developers who prefer extensibility over prescriptive features.
 
+### AI Testing & Quality Assurance
+- **[Agent QA](https://github.com/vostride/agent-qa)** - Source-available QA harness for natural-language web and mobile regression tests, with a CLI, dashboard, MCP server, and run memory. Model, browser, or device-provider costs may apply.
+
 ## 📖 Articles & Websites
 
 ### Development Blogs & Resources
