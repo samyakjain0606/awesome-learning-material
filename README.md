@@ -29,6 +29,7 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 ## 📖 Articles & Websites
 
 ### Development Blogs & Resources
+- **[NextReset](https://nextreset.ai/)** - Independent, source-linked reference for public Codex reset history and official AI service incidents, with a browser-local personal timer.
 - **[Pierce.dev](https://pierce.dev/)** - Exceptional articles on Claude Code, AI development, and cutting-edge programming techniques.
 - **[Spiess.dev](https://spiess.dev/)** - In-depth technical articles covering AI, software development, and modern development practices.
 - **[Steipete.me](https://steipete.me/)** - High-quality content on AI tools, development workflows, and technology insights.
