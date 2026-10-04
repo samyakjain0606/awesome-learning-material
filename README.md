@@ -24,6 +24,7 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 - **[Claudia](https://github.com/getAsterisk/claudia)** - Advanced tool for creating and managing Claude AI agents. Includes detailed documentation on agent creation and management.
 - **[Claude Code Requirements Builder](https://github.com/rizethereum/claude-code-requirements-builder)** - Specialized tool for building and managing requirements in Claude Code projects.
 - **[Claude Code 3 step Workflow](./claude-commands/)** - Custom commands for structured, phase-based development with Claude Code. Transforms chaotic implementation into systematic, testable milestones.
+- **[list-your-startup skill](./claude-skills/)** - Claude Code skill that lists your startup, app or website on free directories and launch platforms through your own Chrome, then reports where you're listed and when each listing goes live. Needs the Claude in Chrome extension and a Google account signed in to that Chrome.
 - **[Pi](https://pi.dev/)** - Minimal, open-source terminal coding agent built on TypeScript extensions. Supports 15+ providers and hundreds of models, with tree-structured sessions, a package ecosystem, and multi-modal queuing. Designed for developers who prefer extensibility over prescriptive features.
 
 ## 📖 Articles & Websites
