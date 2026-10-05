@@ -50,8 +50,8 @@ Requires a Claude Code build with function-hook mods (2.1.287 or newer).
 | Command | Does |
 | --- | --- |
 | `/warm` | status: phase, context size, pings this idle period, today's spend, settings |
-| `/warm pause` / `/warm resume` | pause or resume for this session (resume also lifts `off`) |
-| `/warm off` | off for the rest of today, in every session |
+| `/warm off` / `/warm on` | turn it off or back on for this session only; other sessions keep warming |
+| `/warm off all` / `/warm on all` | off in every session for the rest of today, and lift that again |
 | `/warm now` | ping right now |
 
 ## Settings
@@ -78,7 +78,7 @@ workdays. Overnight is roughly break-even, and the 10-hour knob is where you tun
 
 - `hooks/register.ts` — the hooks module
 - `types/index.d.ts` — the state contract
-- `hooks/warm.test.ts` — tests for `claude plugin test`
+- `hooks/warm.test.ts` — tests: `claude plugin test ~/.claude/skills/cache-warmer`
 - `.claude-plugin/plugin.json` — manifest and settings
 
 MIT.
