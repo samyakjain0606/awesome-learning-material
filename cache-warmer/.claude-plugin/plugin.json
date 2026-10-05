@@ -1,0 +1,44 @@
+{
+  "name": "cache-warmer",
+  "version": "0.1.0",
+  "description": "Keeps an idle session's prompt cache warm with silent pings, then compacts large sessions once while the cache is still warm.",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "pingIntervalMinutes": {
+      "type": "number",
+      "description": "Minutes between keep-alive pings; keep it under the cache lifetime",
+      "default": 50,
+      "title": "Ping interval (minutes)"
+    },
+    "cacheTtlMinutes": {
+      "type": "number",
+      "description": "Prompt cache lifetime in minutes (60 on this account)",
+      "default": 60,
+      "title": "Cache lifetime (minutes)"
+    },
+    "warmHours": {
+      "type": "number",
+      "description": "How many idle hours to keep the cache warm before stopping",
+      "default": 10,
+      "title": "Warm window (hours)"
+    },
+    "minPingContextK": {
+      "type": "number",
+      "description": "Smallest context, in thousands of tokens, worth pinging",
+      "default": 100,
+      "title": "Minimum context to ping (k tokens)"
+    },
+    "minCompactContextK": {
+      "type": "number",
+      "description": "Context, in thousands of tokens, above which the session is compacted when the warm window ends",
+      "default": 500,
+      "title": "Minimum context to compact (k tokens)"
+    },
+    "dailyBudgetK": {
+      "type": "number",
+      "description": "Daily keep-alive budget across all sessions, in thousands of full-price token equivalents",
+      "default": 2000,
+      "title": "Daily keep-alive budget (k equivalents)"
+    }
+  }
+}
