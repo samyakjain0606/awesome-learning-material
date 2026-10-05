@@ -125,7 +125,7 @@ function paint($: Engine, s: WarmState): void {
       $.ui.status(`cold · ${s.note}`)
       break
     case 'paused':
-      $.ui.status('warm paused · /warm resume')
+      $.ui.status('warm off for this session · /warm on')
       break
     case 'stopped':
       $.ui.status(`warm stopped · ${s.note}`)
@@ -232,7 +232,7 @@ async function tick($: Engine): Promise<void> {
 
     // 3. Switched off for the day, or the shared daily budget is spent.
     if (await isOffToday($, now)) {
-      await setPhase($, 'stopped', 'off for today (/warm off)')
+      await setPhase($, 'stopped', 'off in every session for today (/warm off all)')
       return
     }
     const spent = await spentToday($, now)
@@ -306,9 +306,9 @@ async function statusText($: Engine): Promise<string> {
       : '  last activity: none yet',
     `  pings this idle period: ${s.pings} (${k(s.pingTokens)} served from cache)`,
     s.phase === 'warming' ? `  next ping: ${hhmm(s.nextPingAt)}` : null,
-    `  today's keep-alive spend: ${k(spent)} of ${k(cfg.dailyBudget)} equivalents${off ? ' · off for today' : ''}`,
+    `  today's keep-alive spend: ${k(spent)} of ${k(cfg.dailyBudget)} equivalents${off ? ' · off in every session today' : ''}`,
     `  settings: ping every ${span(cfg.pingIntervalMs)} · cache lifetime ${span(cfg.cacheTtlMs)} · warm window ${span(cfg.warmWindowMs)} · ping ≥ ${k(cfg.minPingTokens)} · compact ≥ ${k(cfg.minCompactTokens)}`,
-    '  commands: /warm · /warm pause · /warm resume · /warm off · /warm now',
+    '  commands: /warm · /warm off · /warm on · /warm off all · /warm on all · /warm now',
   ]
   return lines.filter((line): line is string => line !== null).join('\n')
 }
@@ -316,8 +316,8 @@ async function statusText($: Engine): Promise<string> {
 async function onSessionStart($: Engine): Promise<void> {
   await $.command.register({
     name: 'warm',
-    description: 'Cache warmer: status, pause, resume, off (for today), now (ping)',
-    argumentHint: '[pause|resume|off|now]',
+    description: 'Cache warmer: status, off/on for this session, off all/on all (every session, today), now (ping)',
+    argumentHint: '[off|on|off all|on all|now]',
   })
 
   // After a hot reload or a restart: pick the schedule back up from state.
@@ -365,39 +365,52 @@ async function onTurnComplete($: Engine): Promise<void> {
   }
 }
 
+async function resumeHere($: Engine): Promise<string> {
+  const s = await update($, warm, (prev): WarmState => ({ ...prev, note: '' })) // drop the "off" note
+  if (s.lastActivityAt === 0) {
+    await setPhase($, 'idle')
+    return 'cache-warmer is on for this session. It arms after the next turn.'
+  }
+  const { context } = await $.session.usage()
+  const tokens = context.tokens ?? s.contextTokens
+  await update($, warm, (prev): WarmState => ({ ...prev, contextTokens: tokens }))
+  if (tokens < cfg.minPingTokens) {
+    await setPhase($, 'small')
+    return `cache-warmer is on for this session. Context is ${k(tokens)}, under the ${k(cfg.minPingTokens)} ping line, so nothing to do yet.`
+  }
+  await armFrom($, Math.max(s.lastActivityAt, s.lastPingAt))
+  return statusText($)
+}
+
 async function onWarmCommand($: Engine, args: string): Promise<string> {
-  const arg = args.trim().toLowerCase()
+  const arg = args.trim().toLowerCase().replace(/\s+/g, ' ')
   const now = await $.clock.now()
 
-  if (arg === 'pause') {
+  // This session only. 'paused' survives later turns, so it stays off until /warm on.
+  if (arg === 'off' || arg === 'pause') {
     cancel()
-    await setPhase($, 'paused', 'paused by /warm pause')
-    return 'cache-warmer paused for this session. /warm resume to continue.'
+    await setPhase($, 'paused', 'off for this session (/warm off)')
+    return 'cache-warmer is off for this session only. Other sessions keep warming. /warm on turns it back on here.'
   }
 
-  if (arg === 'resume') {
-    await $.store.delete(offKey(now)) // a resume lifts /warm off for today
-    const s = await read($, warm)
-    if (s.lastActivityAt === 0) {
-      await setPhase($, 'idle')
-      return 'cache-warmer resumed. It arms after the next turn.'
-    }
-    const { context } = await $.session.usage()
-    const tokens = context.tokens ?? s.contextTokens
-    await update($, warm, (prev): WarmState => ({ ...prev, contextTokens: tokens }))
-    if (tokens < cfg.minPingTokens) {
-      await setPhase($, 'small')
-      return `cache-warmer resumed. Context is ${k(tokens)}, under the ${k(cfg.minPingTokens)} ping line, so nothing to do yet.`
-    }
-    await armFrom($, Math.max(s.lastActivityAt, s.lastPingAt))
-    return statusText($)
+  if (arg === 'on' || arg === 'resume') {
+    const note = (await isOffToday($, now))
+      ? ` Note: /warm off all is still in effect for every session today, so nothing will ping until /warm on all.`
+      : ''
+    return (await resumeHere($)) + note
   }
 
-  if (arg === 'off') {
+  // Every session, for the rest of today.
+  if (arg === 'off all') {
     cancel()
     await $.store.set(offKey(now), true)
-    await setPhase($, 'stopped', 'off for today (/warm off)')
-    return `cache-warmer is off for the rest of ${dateKey(now)} in every session. /warm resume lifts it.`
+    await setPhase($, 'stopped', 'off in every session for today (/warm off all)')
+    return `cache-warmer is off in every session for the rest of ${dateKey(now)}. /warm on all lifts it.`
+  }
+
+  if (arg === 'on all') {
+    await $.store.delete(offKey(now))
+    return `Lifted /warm off all: every session can warm again.\n${await resumeHere($)}`
   }
 
   if (arg === 'now') {
