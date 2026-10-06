@@ -28,6 +28,9 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 - **[cache-warmer](./cache-warmer/)** - Claude Code mod that keeps an idle session's prompt cache warm for 10 hours, then compacts large sessions once while the cache is still warm. Come back to a 500k-token session without re-paying for the whole thing. Install: `npx degit samyakjain0606/awesome-learning-material/cache-warmer ~/.claude/skills/cache-warmer`
 - **[Pi](https://pi.dev/)** - Minimal, open-source terminal coding agent built on TypeScript extensions. Supports 15+ providers and hundreds of models, with tree-structured sessions, a package ecosystem, and multi-modal queuing. Designed for developers who prefer extensibility over prescriptive features.
 
+### AI Testing & Quality Assurance
+- **[Agent QA](https://github.com/vostride/agent-qa)** - Source-available QA harness for natural-language web and mobile regression tests, with a CLI, dashboard, MCP server, and run memory. Model, browser, or device-provider costs may apply.
+
 ## 📖 Articles & Websites
 
 ### Development Blogs & Resources
