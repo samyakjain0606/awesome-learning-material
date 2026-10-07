@@ -16,6 +16,7 @@ A curated collection of exceptional GitHub repositories, articles, websites, and
 ### AI & Context Engineering
 - **[Context Engineering Intro](https://github.com/coleam00/context-engineering-intro)** - Comprehensive introduction to context engineering techniques. Essential reading for anyone working with AI systems and prompt optimization.
 - **[Graphiti](https://github.com/getzep/graphiti)** - Open-source framework for building real-time knowledge graphs for AI agents. Enables dynamic data management with incremental updates, hybrid search, and temporal data tracking.
+- **[Hyperconsciousness](https://github.com/louis030195/hyperconsciousness)** - MIT-licensed developer-alpha Rust knowledge store with encrypted, append-only records, device sync, and scoped, expiring MCP access for agents.
 
 ### Web Scraping & Data Extraction
 - **[ScrapeGraph-ai](https://github.com/ScrapeGraphAI/Scrapegraph-ai)** - AI-powered web scraping library that uses large language models to create scraping pipelines for websites, documents and XML files with just a prompt.
