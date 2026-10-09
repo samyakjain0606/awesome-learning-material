@@ -1,0 +1,15 @@
+{
+  "name": "awesome-learning-material",
+  "owner": {
+    "name": "Samyak Jain",
+    "url": "https://x.com/Samyak0606"
+  },
+  "description": "Claude Code plugins from awesome-learning-material.",
+  "plugins": [
+    {
+      "name": "guided-review",
+      "source": "./guided-review",
+      "description": "Guided pages for code: review a GitHub PR, or plan a change before building it, on one readable page with chapters, diagrams, flags on exact lines and a live Ask panel."
+    }
+  ]
+}

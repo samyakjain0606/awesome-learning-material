@@ -1,0 +1,9 @@
+{
+  "name": "guided-review",
+  "version": "1.0.0",
+  "description": "Guided pages for code: review a GitHub PR, or plan a change before building it, on one readable page with chapters, diagrams, flags on exact lines and a live Ask panel.",
+  "author": {"name": "Samyak Jain", "url": "https://x.com/Samyak0606"},
+  "repository": "https://github.com/samyakjain0606/awesome-learning-material",
+  "license": "MIT",
+  "keywords": ["code-review", "pull-request", "planning", "diagrams", "artifacts"]
+}
