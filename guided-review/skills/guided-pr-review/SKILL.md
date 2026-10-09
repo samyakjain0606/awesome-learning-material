@@ -32,7 +32,7 @@ Continue only on yes.
 ## 1. Fetch
 
 ```bash
-python3 ~/.claude/skills/guided-pr-review/scripts/fetch_pr.py <number|url|owner/name#n> [--repo owner/name]
+python3 ${CLAUDE_SKILL_DIR}/scripts/fetch_pr.py <number|url|owner/name#n> [--repo owner/name]
 ```
 
 This writes `~/.claude/guided-reviews/<owner>-<name>-<n>/pr.json` (call that folder `DIR`) and prints every file with its status, kind (core, config, test, docs, migration, generated) and +/−. It embeds the full before/after text of changed files, up to a 6 MB budget (`--budget-mb`), so the page can expand unchanged lines and in-page Claude can read whole files. Generated files are never embedded. It also records the test names in each test file and the imports between changed files, which the page draws as a file map.
@@ -40,7 +40,7 @@ This writes `~/.claude/guided-reviews/<owner>-<name>-<n>/pr.json` (call that fol
 ## 2. Read the PR (skip the tests)
 
 - Description: `python3 -c "import json;print(json.load(open('DIR/pr.json'))['body'])"`
-- Diffs with real line numbers: `python3 ~/.claude/skills/guided-pr-review/scripts/pr_diff.py DIR/pr.json [path-substring ...] [--max-lines N]`. It skips test and generated files by default.
+- Diffs with real line numbers: `python3 ${CLAUDE_SKILL_DIR}/scripts/pr_diff.py DIR/pr.json [path-substring ...] [--max-lines N]`. It skips test and generated files by default.
 - **Don't read test files.** The build puts every test file you leave out of the guide into a kept "Tests" chapter. That chapter lists each file's test names, collapses its diffs and leaves it out of the review progress. The reviewer can still ask about tests in the Ask panel. Look at the test names fetch printed only when you need to judge coverage for the verdict.
 - Read every core file's diff in full. For long docs files, skim the headings. Don't read generated or lock files past their header.
 - Before you flag anything, read the code around it (`files[].newText` / `oldText` in pr.json, or the local clone) and confirm it is real. A wrong flag costs the reviewer more than a missing one.
@@ -60,7 +60,7 @@ Follow `references/guide-schema.md` for the shape and the writing rules. The sho
 ## 4. Build
 
 ```bash
-python3 ~/.claude/skills/guided-pr-review/scripts/build_review.py DIR
+python3 ${CLAUDE_SKILL_DIR}/scripts/build_review.py DIR
 ```
 
 This writes `DIR/review.html`. It stops with ✗ lines when guide.json doesn't fit the PR (an unknown path or a bad flow edge); fix those and rerun. ! lines are warnings: files left out of every chapter go into "Everything else", so fix them when they matter.
@@ -99,7 +99,7 @@ Use this when the user says "post my review" (optionally "for #N"). Submitting i
    - Update it to `{"status": "posting"}`.
    - Read its comments: `review_comments` docs whose ids are in `commentIds`.
    - Write `DIR/submission-<id>.json` as `{"event", "body", "comments": [{path, line, startLine, side, body, fileLevel}]}`.
-   - Run `python3 ~/.claude/skills/guided-pr-review/scripts/post_review.py DIR DIR/submission-<id>.json`. It posts one review with `gh`, pinned to the head commit the page was built from. Inline comments must be on diff lines; anything else becomes a file note in the review body.
+   - Run `python3 ${CLAUDE_SKILL_DIR}/scripts/post_review.py DIR DIR/submission-<id>.json`. It posts one review with `gh`, pinned to the head commit the page was built from. Inline comments must be on diff lines; anything else becomes a file note in the review body.
    - On success: update the submission to `{"status": "posted", "url", "reviewId", "postedAt"}` and each of its comments to `{"status": "posted"}`, in one `batch`.
    - On failure: update the submission to `{"status": "failed", "error": "<GitHub's message>"}` and put its comments back to `{"status": "draft", "submission": null}` so the user can fix and resubmit.
 4. Reply with the review link and the counts (inline comments, file notes). If the PR has new commits since the page was built, say that the comments are pinned to the older commit, so GitHub may show some as outdated.

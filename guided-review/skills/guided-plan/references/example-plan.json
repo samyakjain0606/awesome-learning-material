@@ -1,0 +1,218 @@
+{
+ "name": "Payment Retry Plan",
+ "title": "Retry declined card payments instead of cancelling the order",
+ "repo": "acme/shop",
+ "ref": "main",
+ "ticket": {"id": "SHOP-412", "url": "https://example.com/issues/SHOP-412"},
+ "context_files": [
+  "src/payments/checkout.py",
+  "src/payments/gateway.py",
+  "src/orders/models.py",
+  "src/workers/scheduler.py",
+  "config/settings.py"
+ ],
+ "overview": {
+  "summary": [
+   "Checkout cancels an order the moment the card is declined, even when the bank says \"try again later\". In March that cancelled **1,240 orders** that would most likely have gone through on a second try.",
+   "This plan retries soft declines on a backoff schedule, makes every charge idempotent so a retry can never charge twice, and rolls out behind a flag. Hard declines (stolen card, closed account) still cancel at once."
+  ]
+  ,
+  "steps": [
+   "Sort declines into soft (retry) and hard (cancel) by the gateway's decline code (chapter 2).",
+   "Schedule up to three retries for soft declines, and email the customer when the first one is scheduled (chapter 2).",
+   "Send an idempotency key with every charge and record each attempt (chapter 3).",
+   "Ship behind `payment_retry_enabled`, at 10% of orders and then 100% (chapter 4)."
+  ]
+ },
+ "flow": {
+  "caption": "What happens after a declined charge. Toggle Before / After.",
+  "direction": "LR",
+  "nodes": [
+   {"id": "checkout", "label": "POST /checkout", "status": "same"},
+   {"id": "charge", "label": "charge()", "status": "changed", "chapter": 3, "note": "Now sends an idempotency key"},
+   {"id": "gateway", "label": "card gateway", "status": "same"},
+   {"id": "classify", "label": "classify_decline()", "status": "added", "chapter": 2},
+   {"id": "cancel", "label": "order.cancel()", "status": "same"},
+   {"id": "retry", "label": "RetryWorker", "status": "added", "chapter": 2},
+   {"id": "paid", "label": "order paid", "status": "same"}
+  ],
+  "edges": [
+   {"from": "checkout", "to": "charge", "status": "same"},
+   {"from": "charge", "to": "gateway", "status": "same"},
+   {"from": "gateway", "to": "cancel", "label": "any decline", "status": "removed"},
+   {"from": "gateway", "to": "classify", "label": "declined", "status": "added"},
+   {"from": "classify", "to": "cancel", "label": "hard", "status": "added"},
+   {"from": "classify", "to": "retry", "label": "soft", "status": "added"},
+   {"from": "retry", "to": "charge", "label": "after backoff", "status": "added"},
+   {"from": "gateway", "to": "paid", "label": "approved", "status": "same"}
+  ]
+ },
+ "chapters": [
+  {
+   "title": "Why good orders get cancelled",
+   "tier": "problem",
+   "explain": [
+    "`checkout()` treats every decline the same way: it calls `order.cancel()` and shows \"Payment failed\". The gateway already says which declines are temporary, but nothing reads that code.",
+    "Most soft declines are insufficient funds on payday eve, a bank's fraud check that clears in minutes, or a gateway timeout. Customers who notice place the order again by hand. The rest are lost."
+   ],
+   "touches": [
+    "src/payments/checkout.py:88 · cancels on any decline",
+    "src/payments/gateway.py:40 · decline codes are parsed but not used"
+   ],
+   "examples": [
+    {"kind": "stats", "title": "March, all card orders", "items": [
+     {"v": "1,240", "l": "orders cancelled on a soft decline", "s": "of 3,100 declines", "tone": "bad"},
+     {"v": "38%", "l": "of those customers ordered again by hand", "s": "within one hour"},
+     {"v": "$86k", "l": "in orders never placed again", "tone": "bad"},
+     {"v": "61%", "l": "of soft declines pass on a second try", "s": "gateway's own figure", "tone": "good"}
+    ]},
+    {"kind": "chat", "title": "A support ticket from March", "caption": "Ticket 88213, shortened.", "turns": [
+     {"who": "user", "text": "My order got cancelled but my card works fine?"},
+     {"who": "bot", "tone": "bad", "text": "Your payment was declined, so the order was cancelled. Please order again.", "tag": "soft decline: issuer timeout"},
+     {"who": "user", "text": "The item is sold out now."},
+     {"who": "note", "text": "Refund of the shipping upgrade issued by hand"}
+    ]}
+   ],
+   "watch": [
+    {"level": "question", "path": "src/payments/gateway.py", "line": 40, "text": "The gateway documents 14 soft codes, but last month's logs show 3 codes it does not list. Do they count as soft or hard?"}
+   ],
+   "ask": ["Which decline codes did we see last month, and how often?"]
+  },
+  {
+   "title": "Retry soft declines on a backoff schedule",
+   "tier": "core",
+   "explain": [
+    "A new `classify_decline()` reads the gateway's decline code. Hard declines cancel as today. Soft declines move the order to `retrying` and queue a `RetryWorker` job instead.",
+    "The worker charges again on a fixed schedule. A success marks the order paid as usual. After the last failed retry it cancels the order and sends today's \"Payment failed\" email."
+   ],
+   "touches": [
+    "src/payments/checkout.py:88 · branch on `classify_decline()`",
+    "src/payments/gateway.py:40 · map codes to soft or hard",
+    "src/workers/scheduler.py:22 · register `RetryWorker`",
+    "config/settings.py:31 · `payment_retry_enabled` flag"
+   ],
+   "diagrams": [
+    {"kind": "state", "title": "Order payment lifecycle", "caption": "`retrying` is new. Hard declines still go straight to cancelled.", "start": "pending",
+     "nodes": [
+      {"id": "pending", "label": "pending", "status": "same"},
+      {"id": "retrying", "label": "retrying", "status": "added", "chapter": 2},
+      {"id": "paid", "label": "paid", "status": "same", "end": true},
+      {"id": "cancelled", "label": "cancelled", "status": "same", "end": true}
+     ],
+     "edges": [
+      {"from": "pending", "to": "paid", "label": "approved", "status": "same"},
+      {"from": "pending", "to": "cancelled", "label": "hard decline", "status": "changed"},
+      {"from": "pending", "to": "retrying", "label": "soft decline", "status": "added"},
+      {"from": "retrying", "to": "paid", "label": "retry approved", "status": "added"},
+      {"from": "retrying", "to": "cancelled", "label": "last retry fails", "status": "added"}
+     ]}
+   ],
+   "decisions": [
+    {"id": "schedule", "q": "When does the worker retry?",
+     "why": "The gateway says 80% of soft declines that pass do so within one hour.",
+     "options": [
+      {"value": "1m-10m-1h", "label": "1 min, 10 min, 1 h", "note": "catches timeouts fast; done within the hour", "rec": true},
+      {"value": "5m-30m-6h", "label": "5 min, 30 min, 6 h", "note": "catches more insufficient funds; order waits longer"},
+      {"value": "once-15m", "label": "Once, after 15 min", "note": "simplest; misses roughly a third of the passes"}
+     ]},
+    {"id": "notify", "q": "Do we tell the customer when a retry is scheduled?",
+     "why": "Today the customer gets one email: \"Payment failed\".",
+     "options": [
+      {"value": "email-first", "label": "Email when the first retry is scheduled", "note": "stops duplicate orders by hand", "rec": true},
+      {"value": "final-only", "label": "Only email if the last retry fails", "note": "quieter; some customers will reorder"},
+      {"value": "never", "label": "Never", "note": "customer may be charged hours later with no warning"}
+     ]}
+   ],
+   "watch": [
+    {"level": "risk", "path": "src/payments/checkout.py", "line": 88, "text": "If the customer places the order again by hand while a retry is queued, both can succeed. The worker must check that the order is still `retrying` before it charges (chapter 3 makes the charge itself safe)."}
+   ],
+   "ask": ["What does the customer see on the order page while it is retrying?", "Can a retry fire after the stock is gone?"]
+  },
+  {
+   "title": "Make every charge idempotent",
+   "tier": "data",
+   "explain": [
+    "`charge()` will send an `Idempotency-Key` built from the order id and the attempt number. If a request times out and is sent again, the gateway returns the first result instead of charging twice.",
+    "A new `PaymentAttempt` table records each try with its decline code. Support can see why an order is waiting, and the rollout numbers come from this table."
+   ],
+   "touches": [
+    "src/payments/gateway.py:62 · `charge()` sends the key",
+    "src/orders/models.py:18 · `Order.payment_state` gets `retrying`"
+   ],
+   "diagrams": [
+    {"kind": "schema", "title": "Payment records", "caption": "Green is new.",
+     "entities": [
+      {"name": "Order", "status": "changed", "fields": [
+       {"name": "payment_state", "type": "pending | retrying | paid | cancelled", "status": "changed"}
+      ]},
+      {"name": "PaymentAttempt", "status": "added", "chapter": 3, "fields": [
+       {"name": "order_id", "type": "int"},
+       {"name": "attempt_no", "type": "int"},
+       {"name": "idempotency_key", "type": "str"},
+       {"name": "decline_code", "type": "str | None"},
+       {"name": "next_retry_at", "type": "datetime | None"}
+      ]}
+     ],
+     "links": [{"from": "Order", "to": "PaymentAttempt", "label": "attempts"}]}
+   ],
+   "examples": [
+    {"kind": "compare", "title": "The charge request", "caption": "The key stays the same when the request is sent again, and changes with each scheduled retry.",
+     "before": {"label": "today", "lines": ["POST /v1/charges", "amount: 4999", "source: card_8f2…"]},
+     "after": {"label": "after the plan", "lines": ["POST /v1/charges", "+Idempotency-Key: ord_1042-attempt_2", "amount: 4999", "source: card_8f2…"]}}
+   ],
+   "watch": [
+    {"level": "question", "path": "src/orders/models.py", "line": 18, "text": "`payment_state` is a Postgres enum. Adding a value needs its own migration, which cannot run inside a transaction. Ship it before the code."}
+   ],
+   "ask": ["How long does the gateway remember an idempotency key?"]
+  },
+  {
+   "title": "Roll it out behind a flag",
+   "tier": "rollout",
+   "explain": [
+    "Ship the enum migration first, then the idempotency key (safe on its own), then the retry worker behind `payment_retry_enabled`. Turn it on for 10% of orders for a week, then for all of them.",
+    "Watch the numbers below each day. A double charge at any time means turn the flag off and refund by hand."
+   ],
+   "touches": ["config/settings.py:31 · `payment_retry_enabled`, off by default"],
+   "diagrams": [
+    {"kind": "flow", "title": "Order of work", "direction": "LR",
+     "nodes": [
+      {"id": "mig", "label": "enum migration", "status": "added", "chapter": 3},
+      {"id": "key", "label": "idempotency key", "status": "added", "chapter": 3},
+      {"id": "worker", "label": "retry worker, flag off", "status": "added", "chapter": 2},
+      {"id": "ten", "label": "10% of orders", "status": "added"},
+      {"id": "all", "label": "100%", "status": "added"}
+     ],
+     "edges": [
+      {"from": "mig", "to": "key"}, {"from": "key", "to": "worker"},
+      {"from": "worker", "to": "ten"}, {"from": "ten", "to": "all", "label": "after 1 week"}
+     ]}
+   ],
+   "examples": [
+    {"kind": "stats", "title": "What to watch after release", "items": [
+     {"v": "1,240 → <300", "l": "orders cancelled on a soft decline", "s": "per month"},
+     {"v": "0", "l": "double charges", "s": "must stay 0", "tone": "good"},
+     {"v": "? → >40%", "l": "retries that pass"}
+    ]}
+   ],
+   "watch": [],
+   "ask": ["How do we turn it off in the middle of a retry window?"]
+  }
+ ],
+ "verdict": {
+  "risk": "medium",
+  "summary": "The change is contained in checkout and one new worker, but it charges cards without the customer present. The idempotency key and the state check before each retry are what keep it safe.",
+  "checks": [
+   "Confirm in the gateway docs how long an idempotency key is kept (must be longer than the 1 h schedule).",
+   "List last month's decline codes from the logs and sort the 3 undocumented ones.",
+   "Run the enum migration on a staging snapshot.",
+   "Pick the 2 decisions, or keep the suggested ones."
+  ]
+ },
+ "scope": [
+  "Hard declines still cancel at once.",
+  "PayPal and bank transfers. Cards only.",
+  "Refunds and partial captures.",
+  "The checkout page. Only the order page shows a new \"Retrying payment\" label."
+ ],
+ "ask": ["What could charge a customer twice?", "Why not retry hard declines too?", "What does support see for a retrying order?"]
+}
